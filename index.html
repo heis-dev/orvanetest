@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orvane — Horlogerie</title>
+<meta name="description" content="Orvane, horlogerie indépendante. Trois lignes, un seul geste : la mesure juste du temps.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4F0E8;
+    --paper-2:#ECE6DA;
+    --ink:#1B1A17;
+    --ink-soft:#5E5A52;
+    --line:#D6CEBF;
+    --brass:#A8834B;
+    --serif:"Cormorant Garamond", Georgia, serif;
+    --sans:"Inter", system-ui, -apple-system, sans-serif;
+    --max:1200px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  img,svg{display:block;max-width:100%}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 32px}
+  .eyebrow{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--ink-soft)}
+  .serif{font-family:var(--serif);font-weight:300}
+  .rule{height:1px;background:var(--line);border:0}
+
+  /* Header */
+  header{position:fixed;inset:0 0 auto 0;z-index:50;transition:background .4s, border-color .4s;border-bottom:1px solid transparent}
+  header.scrolled{background:rgba(244,240,232,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-color:var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:76px}
+  .logo{font-family:var(--serif);font-size:26px;letter-spacing:.42em;font-weight:400;padding-left:.42em}
+  .links{display:flex;gap:40px;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
+  .links a{position:relative;padding:4px 0}
+  .links a::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:1px;background:var(--ink);transform:scaleX(0);transform-origin:right;transition:transform .4s}
+  .links a:hover::after,.links a.active::after{transform:scaleX(1);transform-origin:left}
+  .burger{display:none;background:none;border:0;width:32px;height:32px;cursor:pointer;position:relative}
+  .burger span{position:absolute;left:4px;right:4px;height:1px;background:var(--ink);transition:transform .35s, opacity .35s}
+  .burger span:nth-child(1){top:12px}.burger span:nth-child(2){top:19px}
+  .menu-open .burger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
+  .menu-open .burger span:nth-child(2){transform:translateY(-3.5px) rotate(-45deg)}
+
+  /* Hero */
+  .hero{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:48px;padding-top:96px;padding-bottom:64px}
+  .hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(48px,7vw,104px);line-height:.98;letter-spacing:-.01em;margin:22px 0 28px}
+  .hero h1 em{font-style:italic;color:var(--brass)}
+  .hero p{max-width:420px;color:var(--ink-soft);font-size:16px}
+  .cta{display:inline-flex;align-items:center;gap:14px;margin-top:40px;font-size:12px;letter-spacing:.24em;text-transform:uppercase;border-bottom:1px solid var(--ink);padding-bottom:8px}
+  .cta span{transition:transform .35s}
+  .cta:hover span{transform:translateX(6px)}
+  .hero-watch{position:relative;display:flex;justify-content:center}
+  .hero-watch .halo{position:absolute;inset:6% 6%;border-radius:50%;border:1px solid var(--line)}
+  .hero-watch .halo.two{inset:-2%;border-style:dashed;opacity:.6;animation:spin 120s linear infinite}
+  .hero-watch svg{width:min(460px,80vw);filter:drop-shadow(0 30px 40px rgba(27,26,23,.18));position:relative}
+  .live{position:absolute;bottom:-36px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* Marquee */
+  .band{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:22px 0}
+  .band-track{display:flex;gap:64px;white-space:nowrap;animation:slide 40s linear infinite;width:max-content}
+  .band-track span{font-family:var(--serif);font-size:26px;font-style:italic;color:var(--ink-soft)}
+  .band-track b{font-weight:400;color:var(--brass);font-style:normal}
+  @keyframes slide{to{transform:translateX(-50%)}}
+
+  section{padding:140px 0}
+  .head{display:flex;justify-content:space-between;align-items:end;gap:32px;margin-bottom:72px;flex-wrap:wrap}
+  .head h2{font-family:var(--serif);font-weight:300;font-size:clamp(38px,5vw,64px);line-height:1.05;margin-top:14px}
+  .head p{max-width:360px;color:var(--ink-soft)}
+
+  /* Collection */
+  .selector{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+  .stage{background:var(--paper-2);aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+  .stage .num{position:absolute;top:24px;left:28px;font-family:var(--serif);font-size:15px;color:var(--ink-soft)}
+  .stage svg{width:70%;transition:opacity .5s, transform .6s cubic-bezier(.2,.7,.2,1)}
+  .stage svg.fade{opacity:0;transform:scale(.94) rotate(-6deg)}
+  .detail h3{font-family:var(--serif);font-weight:300;font-size:52px;line-height:1}
+  .detail .sub{margin:10px 0 28px;color:var(--brass);font-size:12px;letter-spacing:.26em;text-transform:uppercase}
+  .detail p{color:var(--ink-soft);max-width:440px}
+  .specs{margin:36px 0;border-top:1px solid var(--line)}
+  .specs div{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .specs dt{color:var(--ink-soft)}
+  .price{font-family:var(--serif);font-size:30px}
+  .tabs{display:flex;gap:12px;margin-top:40px;flex-wrap:wrap}
+  .tab{background:none;border:1px solid var(--line);padding:12px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;font:inherit;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);transition:border-color .3s,color .3s}
+  .tab i{width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,.15)}
+  .tab.on,.tab:hover{border-color:var(--ink);color:var(--ink)}
+
+  /* Savoir-faire */
+  .craft{background:var(--ink);color:var(--paper)}
+  .craft .eyebrow,.craft .head p{color:#A39D91}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #34322D}
+  .step{padding:40px 28px 8px 0;border-right:1px solid #34322D}
+  .step:last-child{border-right:0}
+  .step + .step{padding-left:28px}
+  .step .n{font-family:var(--serif);font-size:15px;color:var(--brass)}
+  .step h4{font-family:var(--serif);font-weight:300;font-size:30px;margin:18px 0 14px}
+  .step p{color:#A39D91;font-size:14px}
+  .figure{display:flex;gap:80px;margin-top:100px;flex-wrap:wrap}
+  .figure div{flex:1;min-width:160px}
+  .figure strong{display:block;font-family:var(--serif);font-weight:300;font-size:64px;line-height:1}
+  .figure span{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#A39D91}
+
+  /* Maison */
+  .maison{display:grid;grid-template-columns:.9fr 1.1fr;gap:96px;align-items:center}
+  .quote{font-family:var(--serif);font-weight:300;font-style:italic;font-size:clamp(30px,3.6vw,46px);line-height:1.2}
+  .quote::before{content:"“";display:block;font-size:90px;line-height:.6;color:var(--brass);font-style:normal}
+  .maison .text p{color:var(--ink-soft);margin-bottom:20px}
+  .sign{margin-top:32px;font-size:12px;letter-spacing:.24em;text-transform:uppercase}
+
+  /* Contact */
+  .contact{text-align:center;border-top:1px solid var(--line)}
+  .contact h2{font-family:var(--serif);font-weight:300;font-size:clamp(40px,6vw,84px);line-height:1.02;margin:18px 0 28px}
+  .contact h2 em{color:var(--brass)}
+  .contact p{color:var(--ink-soft);max-width:460px;margin:0 auto}
+  .btn{display:inline-block;margin-top:44px;padding:18px 40px;background:var(--ink);color:var(--paper);font-size:12px;letter-spacing:.26em;text-transform:uppercase;transition:background .3s}
+  .btn:hover{background:var(--brass)}
+  .addresses{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:100px;text-align:left}
+  .addresses h5{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--brass);font-weight:500;margin-bottom:12px}
+  .addresses p{margin:0;font-size:14px}
+
+  footer{border-top:1px solid var(--line);padding:32px 0;font-size:12px;color:var(--ink-soft)}
+  footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+  /* Reveal */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 1s cubic-bezier(.2,.7,.2,1), transform 1s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
+  }
+
+  /* Responsive */
+  @media (max-width:900px){
+    .wrap{padding:0 16px}
+    .links{position:fixed;inset:76px 0 auto 0;background:var(--paper);flex-direction:column;gap:0;padding:8px 16px 24px;border-bottom:1px solid var(--line);transform:translateY(-8px);opacity:0;pointer-events:none;transition:opacity .3s, transform .3s}
+    .links a{padding:16px 0;border-bottom:1px solid var(--line)}
+    .links a::after{display:none}
+    .menu-open .links{opacity:1;transform:none;pointer-events:auto}
+    .burger{display:block}
+    .hero{grid-template-columns:1fr;text-align:center;gap:72px;padding-top:120px}
+    .hero p{margin:0 auto}
+    .hero-watch{order:-1}
+    section{padding:96px 0}
+    .selector,.maison{grid-template-columns:1fr;gap:48px}
+    .steps{grid-template-columns:1fr 1fr}
+    .step{border-right:0;border-bottom:1px solid #34322D;padding:32px 16px 32px 0!important}
+    .figure{gap:40px;margin-top:64px}
+    .addresses{grid-template-columns:1fr;text-align:center}
+  }
+  @media (max-width:520px){
+    .steps{grid-template-columns:1fr}
+    .detail h3{font-size:42px}
+    .figure strong{font-size:48px}
+  }
+</style>
+</head>
+<body>
+
+<header id="top">
+  <div class="wrap nav">
+    <a href="#accueil" class="logo" aria-label="Orvane, accueil">ORVANE</a>
+    <nav class="links" id="links">
+      <a href="#collection">Collection</a>
+      <a href="#savoir-faire">Savoir-faire</a>
+      <a href="#maison">Maison</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menu"><span></span><span></span></button>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <div class="wrap hero" id="accueil">
+    <div class="reveal">
+      <div class="eyebrow">Horlogerie indépendante — Depuis 1987</div>
+      <h1>Le temps,<br><em>sans</em> le superflu.</h1>
+      <p>Des montres mécaniques dessinées pour durer plus qu’une mode. Trois lignes, un seul geste : la mesure juste des heures.</p>
+      <a href="#collection" class="cta">Découvrir la collection <span>→</span></a>
+    </div>
+    <div class="hero-watch reveal">
+      <div class="halo two"></div>
+      <div class="halo"></div>
+      <div id="heroWatch"></div>
+      <div class="live" id="liveTime">—</div>
+    </div>
+  </div>
+
+  <div class="band" aria-hidden="true">
+    <div class="band-track">
+      <span>Mouvement automatique <b>·</b></span><span>Assemblé à la main <b>·</b></span><span>Verre saphir <b>·</b></span><span>Réserve de marche 72 h <b>·</b></span><span>Série limitée <b>·</b></span>
+      <span>Mouvement automatique <b>·</b></span><span>Assemblé à la main <b>·</b></span><span>Verre saphir <b>·</b></span><span>Réserve de marche 72 h <b>·</b></span><span>Série limitée <b>·</b></span>
+    </div>
+  </div>
+
+  <!-- COLLECTION -->
+  <section id="collection">
+    <div class="wrap">
+      <div class="head reveal">
+        <div>
+          <div class="eyebrow">La collection</div>
+          <h2>Trois cadrans,<br>trois humeurs.</h2>
+        </div>
+        <p>Chaque modèle partage le même boîtier de 38 mm et le même calibre. Seule change la lumière du cadran.</p>
+      </div>
+
+      <div class="selector reveal">
+        <div class="stage">
+          <div class="num" id="modelNum">01 / 03</div>
+          <div id="stageWatch" style="width:100%;display:flex;justify-content:center"></div>
+        </div>
+        <div class="detail">
+          <h3 id="modelName">Craie</h3>
+          <div class="sub" id="modelSub">Ligne 01 — Cadran opalin</div>
+          <p id="modelText">Un cadran blanc cassé, presque minéral, pour une lecture limpide du matin au soir.</p>
+          <dl class="specs">
+            <div><dt>Diamètre</dt><dd>38 mm</dd></div>
+            <div><dt>Mouvement</dt><dd>Calibre OR-01, automatique</dd></div>
+            <div><dt>Bracelet</dt><dd id="modelStrap">Cuir naturel tanné végétal</dd></div>
+            <div><dt>Étanchéité</dt><dd>50 m</dd></div>
+          </dl>
+          <div class="price" id="modelPrice">1 450 €</div>
+          <div class="tabs" id="tabs"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SAVOIR-FAIRE -->
+  <section class="craft" id="savoir-faire">
+    <div class="wrap">
+      <div class="head reveal">
+        <div>
+          <div class="eyebrow">Savoir-faire</div>
+          <h2>Quatre étapes,<br>une seule main.</h2>
+        </div>
+        <p>Chaque montre est suivie par un même horloger, du dessin à la dernière vérification.</p>
+      </div>
+      <div class="steps reveal">
+        <div class="step"><div class="n">I.</div><h4>Dessin</h4><p>Proportions calculées au dixième de millimètre, pour un équilibre qui ne se remarque pas.</p></div>
+        <div class="step"><div class="n">II.</div><h4>Usinage</h4><p>Boîtier en acier 316L, satiné puis poli à la main sur les arêtes.</p></div>
+        <div class="step"><div class="n">III.</div><h4>Assemblage</h4><p>Cent quarante-deux composants posés un à un, à l’établi.</p></div>
+        <div class="step"><div class="n">IV.</div><h4>Réglage</h4><p>Quinze jours d’observation dans cinq positions avant de quitter l’atelier.</p></div>
+      </div>
+      <div class="figure reveal">
+        <div><strong data-count="142">0</strong><span>Composants</span></div>
+        <div><strong data-count="72">0</strong><span>Heures de réserve</span></div>
+        <div><strong data-count="15">0</strong><span>Jours de contrôle</span></div>
+        <div><strong data-count="300">0</strong><span>Pièces par an</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAISON -->
+  <section id="maison">
+    <div class="wrap maison">
+      <blockquote class="quote reveal">Une montre ne devrait rien ajouter au poignet, sinon la certitude de l’heure.</blockquote>
+      <div class="text reveal">
+        <div class="eyebrow" style="margin-bottom:24px">La maison</div>
+        <p>Fondée dans un petit atelier au pied des montagnes, Orvane est restée ce qu’elle était au premier jour : une poignée d’horlogers qui préfèrent retirer un détail plutôt qu’en ajouter un.</p>
+        <p>Nous ne produisons que quelques centaines de pièces chaque année. Chacune est numérotée, garantie cinq ans et révisable à vie dans notre atelier.</p>
+        <div class="sign">— L’atelier Orvane</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="wrap reveal">
+      <div class="eyebrow">Rendez-vous</div>
+      <h2>Venez l’essayer<br><em>au poignet.</em></h2>
+      <p>Nos pièces se découvrent en personne. Écrivez-nous pour réserver un moment à l’atelier ou chez l’un de nos dépositaires.</p>
+      <a class="btn" href="mailto:contact@orvane.example?subject=Rendez-vous%20atelier">Prendre rendez-vous</a>
+      <div class="addresses">
+        <div><h5>Atelier</h5><p>12 rue des Horlogers<br>Ville, Pays</p></div>
+        <div><h5>Horaires</h5><p>Du mardi au samedi<br>10 h — 18 h</p></div>
+        <div><h5>Écrire</h5><p>contact@orvane.example<br>+00 0 00 00 00 00</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year"></span> Orvane Horlogerie</span>
+    <a href="#accueil">Retour en haut ↑</a>
+  </div>
+</footer>
+
+<script>
+  // ---------- Montre SVG ----------
+  function watchSVG(o){
+    var ticks = "";
+    for (var i=0;i<60;i++){
+      var major = i%5===0;
+      var len = major ? 7 : 2.5;
+      ticks += '<line x1="100" y1="'+(18)+'" x2="100" y2="'+(18+len)+'" stroke="'+o.marks+'" stroke-width="'+(major?1.6:.6)+'" transform="rotate('+(i*6)+' 100 100)" stroke-linecap="round"/>';
+    }
+    return '<svg viewBox="-6 -6 212 212" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Montre Orvane '+o.name+'">'+
+      '<defs><radialGradient id="g'+o.id+'" cx="40%" cy="35%" r="75%"><stop offset="0" stop-color="'+o.dialLight+'"/><stop offset="1" stop-color="'+o.dial+'"/></radialGradient>'+
+      '<linearGradient id="c'+o.id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EDEBE6"/><stop offset=".5" stop-color="#A9A6A0"/><stop offset="1" stop-color="#E2E0DB"/></linearGradient></defs>'+
+      '<rect x="199" y="93" width="7" height="14" rx="2" fill="url(#c'+o.id+')"/>'+
+      '<circle cx="100" cy="100" r="99" fill="url(#c'+o.id+')"/>'+
+      '<circle cx="100" cy="100" r="92" fill="'+o.dial+'"/>'+
+      '<circle cx="100" cy="100" r="90" fill="url(#g'+o.id+')"/>'+
+      ticks+
+      '<text x="100" y="66" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="11" letter-spacing="3.5" fill="'+o.text+'">ORVANE</text>'+
+      '<text x="100" y="142" text-anchor="middle" font-family="Inter, sans-serif" font-size="4.6" letter-spacing="1.8" fill="'+o.text+'" opacity=".7">AUTOMATIQUE</text>'+
+      '<circle cx="100" cy="100" r="30" fill="none" stroke="'+o.marks+'" stroke-width=".3" opacity=".5"/>'+
+      '<g class="h-hour"><line x1="100" y1="106" x2="100" y2="56" stroke="'+o.hands+'" stroke-width="4" stroke-linecap="round"/></g>'+
+      '<g class="h-min"><line x1="100" y1="108" x2="100" y2="28" stroke="'+o.hands+'" stroke-width="2.6" stroke-linecap="round"/></g>'+
+      '<g class="h-sec"><line x1="100" y1="118" x2="100" y2="22" stroke="'+o.accent+'" stroke-width=".9" stroke-linecap="round"/><circle cx="100" cy="100" r="3.6" fill="'+o.accent+'"/></g>'+
+      '<circle cx="100" cy="100" r="1.3" fill="'+o.dial+'"/>'+
+    '</svg>';
+  }
+
+  var models = [
+    {id:"a", name:"Craie", sub:"Ligne 01 — Cadran opalin", dial:"#E9E3D6", dialLight:"#FBF8F2", marks:"#2A2825", text:"#2A2825", hands:"#1F1E1B", accent:"#A8834B",
+     text2:"Un cadran blanc cassé, presque minéral, pour une lecture limpide du matin au soir.", strap:"Cuir naturel tanné végétal", price:"1 450 €"},
+    {id:"b", name:"Nuit", sub:"Ligne 02 — Cadran bleu profond", dial:"#16213A", dialLight:"#2C3C62", marks:"#E8E2D4", text:"#E8E2D4", hands:"#F2EEE5", accent:"#C9A46A",
+     text2:"Un bleu d’encre qui change avec la lumière, du noir au soir jusqu’à l’outremer au soleil.", strap:"Cuir noir cousu main", price:"1 590 €"},
+    {id:"c", name:"Forêt", sub:"Ligne 03 — Cadran vert sapin", dial:"#1F3329", dialLight:"#39574A", marks:"#E4DFD1", text:"#E4DFD1", hands:"#F0ECE2", accent:"#C9A46A",
+     text2:"Un vert sombre et soyeux, inspiré des sous-bois en hiver. Notre modèle le plus confidentiel.", strap:"Daim brun tabac", price:"1 590 €"}
+  ];
+
+  // Hero
+  document.getElementById("heroWatch").innerHTML = watchSVG(Object.assign({}, models[0], {id:"h"}));
+
+  // Collection
+  var stage = document.getElementById("stageWatch");
+  var tabs = document.getElementById("tabs");
+  var current = 0;
+  models.forEach(function(m,i){
+    var b = document.createElement("button");
+    b.className = "tab" + (i===0?" on":"");
+    b.innerHTML = '<i style="background:'+m.dial+'"></i>'+m.name;
+    b.addEventListener("click", function(){ select(i); });
+    tabs.appendChild(b);
+  });
+  function render(i){
+    var m = models[i];
+    stage.innerHTML = watchSVG(m);
+    document.getElementById("modelNum").textContent = "0"+(i+1)+" / 03";
+    document.getElementById("modelName").textContent = m.name;
+    document.getElementById("modelSub").textContent = m.sub;
+    document.getElementById("modelText").textContent = m.text2;
+    document.getElementById("modelStrap").textContent = m.strap;
+    document.getElementById("modelPrice").textContent = m.price;
+    tick();
+  }
+  function select(i){
+    if (i===current) return;
+    current = i;
+    Array.prototype.forEach.call(tabs.children, function(t,k){ t.classList.toggle("on", k===i); });
+    var svg = stage.querySelector("svg");
+    if (svg){ svg.classList.add("fade"); }
+    setTimeout(function(){
+      render(i);
+      var n = stage.querySelector("svg");
+      n.classList.add("fade");
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ n.classList.remove("fade"); }); });
+    }, 350);
+  }
+  render(0);
+
+  // Aiguilles à l'heure réelle
+  function tick(){
+    var d = new Date();
+    var s = d.getSeconds() + d.getMilliseconds()/1000;
+    var m = d.getMinutes() + s/60;
+    var h = (d.getHours()%12) + m/60;
+    document.querySelectorAll(".h-hour").forEach(function(g){ g.setAttribute("transform","rotate("+(h*30)+" 100 100)"); });
+    document.querySelectorAll(".h-min").forEach(function(g){ g.setAttribute("transform","rotate("+(m*6)+" 100 100)"); });
+    document.querySelectorAll(".h-sec").forEach(function(g){ g.setAttribute("transform","rotate("+(Math.floor(s*4)/4*6)+" 100 100)"); });
+    var pad = function(n){ return String(n).padStart(2,"0"); };
+    document.getElementById("liveTime").textContent = "Il est " + pad(d.getHours()) + " h " + pad(d.getMinutes());
+  }
+  tick(); setInterval(tick, 250);
+
+  // Header & menu
+  var header = document.getElementById("top");
+  window.addEventListener("scroll", function(){ header.classList.toggle("scrolled", window.scrollY > 20); }, {passive:true});
+  document.getElementById("burger").addEventListener("click", function(){ document.body.classList.toggle("menu-open"); });
+  document.querySelectorAll("#links a").forEach(function(a){ a.addEventListener("click", function(){ document.body.classList.remove("menu-open"); }); });
+
+  // Lien actif
+  var navLinks = document.querySelectorAll("#links a");
+  var secObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting){
+        navLinks.forEach(function(a){ a.classList.toggle("active", a.getAttribute("href") === "#"+e.target.id); });
+      }
+    });
+  }, {rootMargin:"-45% 0px -50% 0px"});
+  ["collection","savoir-faire","maison","contact"].forEach(function(id){ secObs.observe(document.getElementById(id)); });
+
+  // Apparition au défilement + compteurs
+  var revObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (!e.isIntersecting) return;
+      e.target.classList.add("in");
+      e.target.querySelectorAll("[data-count]").forEach(function(el){
+        var end = +el.dataset.count, t0 = null;
+        function step(t){ if(!t0) t0=t; var p=Math.min((t-t0)/1400,1); el.textContent=Math.round(end*(1-Math.pow(1-p,3))); if(p<1) requestAnimationFrame(step); }
+        requestAnimationFrame(step);
+      });
+      revObs.unobserve(e.target);
+    });
+  }, {threshold:.15});
+  document.querySelectorAll(".reveal").forEach(function(el){ revObs.observe(el); });
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
